@@ -1,0 +1,64 @@
+apiVersion: ray.io/v1alpha1
+kind: RayService
+metadata:
+  name: rayservice-llm
+spec:
+  serviceUnhealthySecondThreshold: 300
+  deploymentUnhealthySecondThreshold: 300
+  serveConfigV2: |
+    applications:
+    - name: app1
+      route_prefix: /
+      import_path: app.main:app
+      runtime_env: {}
+      deployments:
+      - name: FlanT5
+      - name: API
+  rayClusterConfig:
+    rayVersion: "2.9.0" # Should match Ray version in the containers
+    headGroupSpec:
+      rayStartParams:
+        dashboard-host: "0.0.0.0"
+      template:
+        spec:
+          containers:
+            - name: ray-head
+              image: 123456789.dkr.ecr.eu-west-2.amazonaws.com/ray-llm:latest
+              resources:
+                limits:
+                  cpu: 2
+                  memory: 2Gi
+                requests:
+                  cpu: 2
+                  memory: 2Gi
+              ports:
+                - containerPort: 6379
+                  name: gcs-server
+                - containerPort: 8265 # Ray dashboard
+                  name: dashboard
+                - containerPort: 10001
+                  name: client
+                - containerPort: 8000
+                  name: serve
+    workerGroupSpecs:
+      - replicas: 1
+        minReplicas: 1
+        maxReplicas: 1
+        groupName: small-group
+        rayStartParams: {}
+        template:
+          spec:
+            containers:
+              - name: ray-worker
+                image: 123456789.dkr.ecr.eu-west-2.amazonaws.com/ray-llm:latest
+                lifecycle:
+                  preStop:
+                    exec:
+                      command: ["/bin/sh", "-c", "ray stop"]
+                resources:
+                  limits:
+                    cpu: "1"
+                    memory: "2Gi"
+                  requests:
+                    cpu: "500m"
+                    memory: "2Gi"
