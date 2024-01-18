@@ -4,6 +4,10 @@ For Ray Serve, it is recommended in the [docs](https://docs.ray.io/en/latest/ser
 
 This integration offers the scalability and user experience of Ray Serve with the operational benefits of Kubernetes, including the ability to integrate with existing Kubernetes-based applications. RayService simplifies production deployment by managing health checks, status reporting, failure recovery, and updates for you.
 
+This repo is intended to go alongside my YouTube video on the same topic:
+
+[![Deploying a Distributed Ray Python Server with Kubernetes, EKS & KubeRay to serve our own LLM](https://img.youtube.com/vi/GEuM9rXtmkk/0.jpg)](https://www.youtube.com/watch?v=GEuM9rXtmkk)
+
 ## Getting started
 
 Install ray:
@@ -34,6 +38,6 @@ This is repo with minimal code to test ray deployment of a Serve deployment inte
 4. Deploy on Kubernetes Locally
 5. Deploy on Kubernetes on AWS
 
-## Notes 
+## Notes
 
 See my [wiki](https://wiki.shav.dev/cloud-mlops/deployment/deploying-ray) for more details on the deployment process, including Log Persistence, Autoscaling, and more.
